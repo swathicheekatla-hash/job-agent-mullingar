@@ -1,16 +1,15 @@
 name: Job Agent
 
 on:
+  workflow_dispatch:   # ← allows manual run
   schedule:
-    - cron: "*/20 * * * *"
+    - cron: "*/20 * * * *"  # every 20 min
 
 jobs:
   run:
-
     runs-on: ubuntu-latest
 
     steps:
-
       - uses: actions/checkout@v3
 
       - uses: actions/setup-python@v4
