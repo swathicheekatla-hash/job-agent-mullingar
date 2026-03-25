@@ -1,29 +1,34 @@
 import requests
 from bs4 import BeautifulSoup
+import smtplib
 
-KEYWORDS = ["retail", "shop", "sales assistant", "store assistant"]
-LOCATION = "Mullingar"
+EMAIL = "swathi.cheekatla@gmail.com"
+PASSWORD = "ehprdurpwlqjwymb"
 
-URLS = [
-    "https://ie.indeed.com/jobs?q=retail&l=Mullingar",
-    "https://www.irishjobs.ie/Jobs/Mullingar-Retail",
-]
+def send_mail(text):
+    server = smtplib.SMTP("smtp.gmail.com", 587)
+    server.starttls()
+    server.login(EMAIL, PASSWORD)
 
-def check_jobs():
-    for url in URLS:
-        r = requests.get(url)
-        soup = BeautifulSoup(r.text, "html.parser")
+    message = "New job found:\n" + text
 
-        jobs = soup.find_all("a")
-
-        for job in jobs:
-            text = job.text.lower()
-
-            if LOCATION.lower() in text:
-                for k in KEYWORDS:
-                    if k in text:
-                        print("FOUND:", text)
+    server.sendmail(EMAIL, EMAIL, message)
+    server.quit()
 
 
-if __name__ == "__main__":
-    check_jobs()
+def check():
+    url = "https://ie.indeed.com/jobs?q=retail&l=Mullingar"
+
+    r = requests.get(url)
+    soup = BeautifulSoup(r.text, "html.parser")
+
+    for job in soup.find_all("a"):
+        t = job.text.lower()
+
+        if "mullingar" in t and (
+            "retail" in t or "shop" in t or "assistant" in t
+        ):
+            send_mail(t)
+
+
+check()
