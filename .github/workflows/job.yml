@@ -5,14 +5,15 @@ on:
     - cron: "*/20 * * * *"
 
 jobs:
-  run-script:
+  run:
+
     runs-on: ubuntu-latest
 
     steps:
+
       - uses: actions/checkout@v3
 
-      - name: Install Python
-        uses: actions/setup-python@v4
+      - uses: actions/setup-python@v4
         with:
           python-version: 3.11
 
